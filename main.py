@@ -12,6 +12,24 @@ if not firebase_admin._apps:
 
 db = firestore.client()
 
+# Function to generate names of videos and categories
+def get_category_video_names(collection_name):
+    docs = db.collection(collection_name).get()
+    videos = {}
+
+    for doc in docs:
+        url = doc.to_dict()['URL']
+        category = url.split('/')[-2]
+        videos[category] = []
+
+    for doc in docs:
+        url = doc.to_dict()['URL']
+        category = url.split('/')[-2]
+        video_name = url.split('/')[-1].split('.')[0]
+        videos[category].append(video_name)
+
+    return videos
+
 # Function to update the "Coaches" field of a video document
 def update_coaches(video_name, coaches):
     doc_ref = db.collection("VIdeonew").document(video_name)
@@ -35,12 +53,7 @@ def main():
     all_coaches = sorted(list(
         set([coach for coaches in available_coaches.values() for coach in coaches])))
 
-    videos = {
-        "Cricket": ["Cricket Video 1", "Cricket Video 2", "Cricket Video 3"],
-        "Football": ["Football Video 1", "Football Video 2", "Football Video 3"],
-        "Hockey": ["Hockey Video 1", "Hockey Video 2", "Hockey Video 3"],
-        "Basketball": ["Basketball Video 1", "Basketball Video 2", "Basketball Video 3"],
-    }
+    videos = get_category_video_names("videos")
 
     selected_sport = st.selectbox("Select Sport", list(videos.keys()))
 
