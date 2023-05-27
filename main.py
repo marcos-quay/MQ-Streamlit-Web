@@ -30,16 +30,16 @@ def get_category_video_names(collection_name):
 
     return videos
 
-# Function to update the "Coaches" field of a video document
+# Function to update the "coaches" field of a video document
 def update_coaches(video_name, coaches):
-    doc_ref = db.collection("VIdeonew").document(video_name)
-    doc_ref.update({"Coaches": coaches})
+    doc_ref = db.collection("videos").document(video_name)
+    doc_ref.update({"coaches": coaches})
 
 # write a function to reset the coaches field of all the documents in the collection
 def reset_coaches():
-    docs = db.collection("VIdeonew").stream()
+    docs = db.collection("videos").stream()
     for doc in docs:
-        doc.reference.update({"Coaches": []})
+        doc.reference.update({"coaches": []})
 
 def main():
     st.title("Video Coaches Editor")
@@ -78,7 +78,7 @@ def main():
     if st.button("Update Coaches"):
         if video_name and edited_coaches:
             # update_coaches(video_name, selected_coaches)
-            update_coaches('Video1', edited_coaches)
+            update_coaches(video_name, edited_coaches)
             st.success(
                 f"Coaches for video '{video_name}' updated successfully!")
         else:
