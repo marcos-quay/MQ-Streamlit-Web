@@ -17,8 +17,11 @@ def update_coaches(video_name, coaches):
     doc_ref = db.collection("VIdeonew").document(video_name)
     doc_ref.update({"Coaches": coaches})
 
-# Streamlit web page
-
+# write a function to reset the coaches field of all the documents in the collection
+def reset_coaches():
+    docs = db.collection("VIdeonew").stream()
+    for doc in docs:
+        doc.reference.update({"Coaches": []})
 
 def main():
     st.title("Video Coaches Editor")
@@ -55,11 +58,6 @@ def main():
                                     options=all_coaches,
                                     default=selected_coaches)
 
-    # Edit group of coaches
-    # if st.button("Edit Group"):
-    #     available_coaches[selected_group] = edited_coaches
-    #     st.success(f"Group '{selected_group}' edited successfully!")
-
     # Display selected coaches
     st.write(f"Selected Coaches: {edited_coaches}")
 
@@ -73,6 +71,10 @@ def main():
         else:
             st.warning(
                 "Please enter both video name and select at least one coach.")
+            
+    if st.button("Reset Coaches"):
+        reset_coaches()
+        st.success("Coaches reset successfully!")
 
 
 if __name__ == "__main__":
