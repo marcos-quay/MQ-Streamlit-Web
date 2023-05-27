@@ -28,6 +28,8 @@ def get_category_video_names(collection_name):
         video_name = url.split('/')[-1].split('.')[0]
         videos[category].append(video_name)
 
+    videos = dict(sorted(videos.items()))
+    videos = {k: sorted(v) for k, v in videos.items()}
     return videos
 
 # Function to update the "coaches" field of a video document
