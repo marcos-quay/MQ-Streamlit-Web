@@ -1,0 +1,5 @@
+mq_web_env/
+mq-video-app-firebase-sdk.json
+secrets.toml
+.vscode/
+json_to_toml.py
