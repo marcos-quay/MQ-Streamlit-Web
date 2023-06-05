@@ -3,6 +3,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from firebase_admin import auth
 import streamlit as st
+import plotly.express as px
 import json
 
 certificate = json.loads(st.secrets["textkey"])
@@ -64,10 +65,26 @@ def update_coaches(video_name, coaches):
 
 # write a function to reset the coaches field of all the documents in the collection
 def reset_coaches():
-    docs = db.collection("videos").stream()
+    docs = db.collection("videos").get()
     for doc in docs:
         doc.reference.update({"coaches": []})
 
+def create_pie_chart():
+    docs = db.collection("videos").get()
+    pie_chart_data = {} # {video_name: coaches_count}
+
+    for doc in docs:
+        doc_dict = doc.to_dict()
+        if doc_dict['coaches']:
+            url = doc_dict['URL']
+            video_name = url.split('/')[-1].split('.')[0]
+            pie_chart_data[video_name] = len(doc_dict['coaches'])
+
+    fig = px.pie(values=list(pie_chart_data.values()), names=list(pie_chart_data.keys()))
+    fig.update_traces(textposition='inside', textinfo='percent+label')
+    fig.update_layout(uniformtext_minsize=16, uniformtext_mode='hide')
+    
+    return fig
 
 def main():
     st.title("Video Coaches Editor")
@@ -128,6 +145,9 @@ def main():
         reset_coaches()
         st.success("Coaches reset successfully!")
 
+    st.header("Video - Coaches Distribution")
+    fig = create_pie_chart()
+    st.plotly_chart(fig, use_container_width=True)
 
 if __name__ == "__main__":
     main()

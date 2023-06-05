@@ -3,3 +3,6 @@ mq-video-app-firebase-sdk.json
 secrets.toml
 .vscode/
 json_to_toml.py
+firebase.json
+.gcloudignore
+utils/
