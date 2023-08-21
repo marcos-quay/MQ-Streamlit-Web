@@ -341,6 +341,13 @@ Make sure to save this file. This file will not be available after you close the
                 if len(new_coaches_emails) == 0:
                     st.warning("No new coaches to add!")
                 else:
+                    new_coaches_df = pd.DataFrame(
+                        {
+                            'name': new_coaches_names,
+                            'email': new_coaches_emails
+                        }
+                    )
+                    st.write(new_coaches_df)
                     if not check_emails(new_coaches_emails):
                         st.error(
                             "Please correct the emails and upload the file again.")
